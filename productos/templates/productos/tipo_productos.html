@@ -1,0 +1,115 @@
+{% extends 'layouts/base.html' %}
+    {% load static %}
+    {% block content %}
+    <script src="{% static 'js/tipo_productos.js' %}"></script>
+    <div class="container">
+
+        <div class="crear">
+            <h2 class="mt-5 mb-5">CREAR TIPO DE PRODUCTOS</h2>
+
+            <form action="" method="POST" enctype="multipart/form-data">
+                <div class="form-tp">
+                    {% csrf_token %}
+                    <div class="crprod">
+                        <div class="ctprod-nom">
+                            {{formTP.nombre.label_tag}}
+                            {{formTP.nombre}}
+                        </div>
+                        <div class="ctprod-img">
+                            {{formTP.imagen.label_tag}}
+                            {{formTP.imagen}}
+                        </div>
+                    </div>
+                </div>
+                <div class="btpin">
+                    <button>Guardar</button>
+                </div>
+            </form>
+        </div>
+        {% if messages %}
+            <ul id="mensajes-validacion" class="mensajeTipo">
+            {% for message  in messages%}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        <div class="mostrar">
+            <h2 class="my-5">LISTA DE TIPO DE PRODUCTOS</h2>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><a href="?orden=id&modo={{ sig_modo }}">ID
+                            {% if orden == 'id' %}
+                                {% if sig_modo == 'asc' %}
+                                    <i class="fas fa-caret-up"></i>
+                                {% else %}
+                                    <i class="fas fa-caret-down"></i>
+                                {% endif %}
+                            {% endif %}
+                        </a></th>
+                        <th><a href="?orden=nombre&modo={{ sig_modo }}">NOMBRE
+                            {% if orden == 'nombre' %}
+                                {% if sig_modo == 'asc' %}
+                                    <i class="fas fa-caret-up"></i>
+                                {% else %}
+                                    <i class="fas fa-caret-down"></i>
+                                {% endif %}
+                            {% endif %}
+                        </a></th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tipoproductos in tp %}
+                        <tr>
+                            <td>{{tipoproductos.id}}</td>
+                            <td>{{tipoproductos.nombre}}</td>
+                            <td class="m-tprod-btn">
+                                <div class="edit-tprod">
+                                    <button type="button" data-toggle="modal" data-target="#editarTipoProducto{{ tipoproductos.id }}" class="edit-tprod-btn btn btn-primary">EDITAR</button>
+
+                                    <div class="modal fade" id="editarTipoProducto{{tipoproductos.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <h2 class="mt-3">EDITAR TIPO DE PRODUCTOS</h2>
+                                                <!-- Contenido del formulario de edición del tipo de producto -->
+                                                <form action="" method="POST">
+                                                    {% csrf_token %}
+                                                    <!-- Aquí colocas los campos para editar el producto, por ejemplo: -->
+                                                    <div class="modal-body">
+                                                        <div class="row mt-3">
+                                                            <div class="col-6">
+                                                                {{formTP.nombre.label_tag}}
+                                                                <input type="text" class="form-control" id="nombre" name="nombre" value="{{ tipoproductos.nombre }}">
+                                                            </div>
+                                                            <div class="col-6">
+                                                                {{formTP.imagen.label_tag}}
+                                                                <input type="file" name="imagen" id="imagen" class="form-control-file" value="{{tipoproductos.imagen}}">
+                                                            </div>
+                                                        </div>
+                                                        <!-- Otros campos para editar -->
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                        <button type="submit" name="editarTipoProducto" value="{{ tipoproductos.id }}" class="btn btn-primary">Guardar cambios</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="elim-tprod">
+                                    <form action="" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" id="eliminarTipo" name="elimiarTipoProducto" value="{{tipoproductos.id}}" class="elim-tprod-btn btn btn-danger">ELIMINAR</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endblock %}

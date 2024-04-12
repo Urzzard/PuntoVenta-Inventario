@@ -1,0 +1,101 @@
+{% extends 'layouts/base.html' %}
+    {% load static %}
+    {% block content %}
+
+    <script src="{% static 'js/venta_productos.js' %}"></script>
+
+        <div class="ventas">
+            <div class="container">
+                <h2 class="mt-5 mb-4">RESUMEN DE VENTAS</h2>
+                {% if messages %}
+                    <ul id="mensajes-validacion" class="mensajeVenta">
+                    {% for message  in messages%}
+                        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                <div class="filtro-tiempo">
+                    <form method="GET" action="">
+                        <div class="vt-buscador mb-4">
+                            <div class="f-inicio">
+                                <label for="fecha_inicio">Fecha de inicio:</label>
+                                <div class="ffiltro">
+                                    <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" {% if fecha_inicio %} value="{{ fecha_inicio|date:'Y-m-d\TH:i' }}" {% endif %}>
+                                </div>
+                            </div>
+                            <div class="f-fin">
+                                <label for="fecha_fin">Fecha de fin:</label>
+                                <div class="ffiltro">
+                                    <input type="datetime-local" id="fecha_fin" name="fecha_fin" {% if fecha_fin %} value="{{ fecha_fin|date:'Y-m-d\TH:i' }}" {% endif %}>
+                                </div>
+                            </div>
+                            <div class="ffecha-btn my-auto">
+                                <label for="">&nbsp;</label>
+                                <div>
+                                <button class="btn btn-primary" type="submit">Filtrar</button>
+                                {% if fecha_inicio or fecha_fin %}
+                                    <a class="btn btn-danger" href="?">Borrar Filtro</a>
+                                {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="resumen-ventas">
+                    {% for ventageneral in vg %}
+                        <div class="v-info">
+                            <div id="id-venta" class="id-venta">
+                                ID: {{ventageneral.id}}
+                            </div>
+                            <div class="venta-primero">
+                                <div class="fecha-venta my-1">
+                                    <div class="v-label">Fecha y Hora de Venta:</div>
+                                    <div class="v-text">{{ventageneral.fecha_hora}}</div>
+                                </div>
+                                <div class="usuario-venta my-1">
+                                    <div class="v-label">Vendedor:</div>
+                                    <div class="v-text">{{ventageneral.usuario}}</div>
+                                </div>
+                                <div class="comprobante-venta my-1">
+                                    <div class="v-label">Tipo de Comprobante:</div>
+                                    <div class="v-text">{{ventageneral.tipo_comprobante}}</div>
+                                </div>
+                            </div>
+                            <div class="producto-venta">
+                                <div class="subtitulos-venta my-2">
+                                    <div class="pv-titulo col-6">Productos</div>
+                                    <div class="pv-precio col-2">Precio</div>
+                                    <div class="pv-cantidad col-2">Cantidad</div>
+                                    <div class="pv-subtotal col-2">Subtotal</div>
+                                </div>
+                                <div class="productos-vendidos my-auto">
+                                    {% for productoventa in pv %}
+                                        {% if productoventa.venta.id == ventageneral.id %}
+                                            <div class="productos-vendidos-datos my-2">
+                                                <div class="pv-nom col-6">{{productoventa.nombre}}</div>
+                                                <div class="pv-num col-2">{{productoventa.precio}}</div>
+                                                <div class="pv-num col-2">{{productoventa.cantidad}}</div>
+                                                <div class="pv-num col-2">S/. {{productoventa.subtotal}}</div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="total-venta">
+                                <div>TOTAL:</div>
+                                <div class="v-total">S./ {{ventageneral.total}}</div>
+                            </div>
+                            <div class="v-eliminar">
+                                <form action="" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" id="elimninarVenta" name="elimninarVenta" value="{{ventageneral.id}}" class="btn-eliminar-venta">x</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </div>
+
+    {% endblock %}

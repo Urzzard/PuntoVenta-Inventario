@@ -1,0 +1,185 @@
+{% extends 'layouts/base.html' %}
+    {% load static %}
+    {% block content %}
+
+    <script src="{% static 'js/registro_producto.js' %}"></script>
+
+    <div class="container">
+
+        <div class="crear">
+            <h2 class="my-5">CREAR REGISTRO</h2>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="crprod mb-4">
+                    <div class="crprod-prod">
+                        {{rform.rproducto.label_tag}}
+                        {{rform.rproducto}}
+                    </div>
+                    <div class="crprod-tipo">
+                        {{rform.rtipo.label_tag}}
+                        {{rform.rtipo}}
+                    </div>
+                    <div class="crprod-cantidad">
+                        {{rform.rcantidad.label_tag}}
+                        {{rform.rcantidad}}
+                    </div>
+                    <div class="crprod-razon">
+                        {{rform.rrazon.label_tag}}
+                        {{rform.rrazon}}
+                    </div>
+                </div>
+                <div class="btpin">
+                    <button>Guardar</button>
+                </div>
+            </form>
+        </div>
+
+        {% if messages %}
+            <ul id="mensajes-validacion" class="mensajeRegistro">
+            {% for message  in messages%}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+
+        <div class="mostrar">
+            <h2 class="my-5">LISTA DE REGISTROS</h2>
+
+            <div class="filtro-tiempo">
+                <form method="GET" action="">
+                    <div class="row mb-4 ">
+                        <div class="f-inicio col-3">
+                            <label for="fecha_inicio">Fecha de inicio:</label>
+                            <div class="ffiltro">
+                                <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" {% if fecha_inicio %} value="{{ fecha_inicio|date:'Y-m-d\TH:i' }}" {% endif %}>
+                            </div>
+                        </div>
+                        <div class="f-fin col-3">
+                            <label for="fecha_fin">Fecha de fin:</label>
+                            <div class="ffiltro">
+                                <input type="datetime-local" id="fecha_fin" name="fecha_fin" {% if fecha_fin %} value="{{ fecha_fin|date:'Y-m-d\TH:i' }}" {% endif %}>
+                            </div>
+                        </div>
+                        <div class="ffecha-btn col-3 my-auto">
+                            <label for="">&nbsp;</label>
+                            <div>
+                            <button class="btn btn-primary" type="submit">Filtrar</button>
+                            {% if fecha_inicio or fecha_fin %}
+                                <a class="btn btn-danger" href="?">Borrar Filtro</a>
+                            {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <table class="m-preg table">
+                <thead>
+                    <tr>
+                        <th><a href="?orden=id&modo={{ sig_modo }}">ID
+                            {% if orden == 'id' %}
+                                {% if sig_modo == 'asc' %}
+                                    <i class="fas fa-caret-up"></i>
+                                {% else %}
+                                    <i class="fas fa-caret-down"></i>
+                                {% endif %}
+                            {% endif %}
+                        </a></th>
+                        <th><a href="?orden=rproducto&modo={{ sig_modo }}">PRODUCTO
+                            {% if orden == 'rproducto' %}
+                                {% if sig_modo == 'asc' %}
+                                    <i class="fas fa-caret-up"></i>
+                                {% else %}
+                                    <i class="fas fa-caret-down"></i>
+                                {% endif %}
+                            {% endif %}
+                        </a></th>
+                        <th><a href="?orden=rtipo&modo={{ sig_modo }}">REGISTRO
+                            {% if orden == 'rtipo' %}
+                                {% if sig_modo == 'asc' %}
+                                    <i class="fas fa-caret-up"></i>
+                                {% else %}
+                                    <i class="fas fa-caret-down"></i>
+                                {% endif %}
+                            {% endif %}
+                        </a></th>
+                        <th><a href="?orden=rcantidad&modo={{ sig_modo }}">CANTIDAD
+                            {% if orden == 'rcantidad' %}
+                                {% if sig_modo == 'asc' %}
+                                    <i class="fas fa-caret-up"></i>
+                                {% else %}
+                                    <i class="fas fa-caret-down"></i>
+                                {% endif %}
+                            {% endif %}
+                        </a></th>
+                        <th><a href="?orden=rusuario&modo={{ sig_modo }}">USUARIO
+                            {% if orden == 'rusuario' %}
+                                {% if sig_modo == 'asc' %}
+                                    <i class="fas fa-caret-up"></i>
+                                {% else %}
+                                    <i class="fas fa-caret-down"></i>
+                                {% endif %}
+                            {% endif %}
+                        </a></th>
+                        <th><a href="?orden=rfecha&modo={{ sig_modo }}">FECHA
+                            {% if orden == 'rfecha' %}
+                                {% if sig_modo == 'asc' %}
+                                    <i class="fas fa-caret-up"></i>
+                                {% else %}
+                                    <i class="fas fa-caret-down"></i>
+                                {% endif %}
+                            {% endif %}
+                        </a></th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for registrop in pregistro %}
+
+                        {% if fecha_inicio and fecha_fin %}
+                            {% if registrop.rfecha >= fecha_inicio and registrop.rfecha <= fecha_fin %}
+
+                                <tr>
+                                    <td>{{registrop.id}}</td>
+                                    <td>{{registrop.rproducto.nombre}}</td>
+                                    <td>{{registrop.rtipo}}</td>
+                                    <td>{{registrop.rcantidad}}</td>
+                                    <td>{{registrop.rusuario}}</td>
+                                    <td>{{registrop.rfecha}}</td>
+                                    <td>
+                                        <form action="" method="POST">
+                                            {% csrf_token %}
+                                            <button type="submit" id="eliminarRegistro" name="eliminarRegistro" value="{{registrop.id}}" class="btn btn-danger">ELIMINAR</button>
+                                        </form>
+                                    </td>
+                                </tr>
+
+                            {% endif %}
+                        {% else %}
+
+                            <tr>
+                                <td>{{registrop.id}}</td>
+                                <td>{{registrop.rproducto.nombre}}</td>
+                                <td>{{registrop.rtipo}}</td>
+                                <td>{{registrop.rcantidad}}</td>
+                                <td>{{registrop.rusuario}}</td>
+                                <td>{{registrop.rfecha}}</td>
+                                <td>
+                                    <form action="" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" id="eliminarRegistro" name="eliminarRegistro" value="{{registrop.id}}" class="elim-preg-btn btn btn-danger">ELIMINAR</button>
+                                    </form>
+                                </td>
+                            </tr>
+
+                        {% endif %}
+                        
+                    
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    {% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'layouts/base.html' %}
+    {% load static %}
+    {% block content %}
+    
+    <script src="{% static 'js/punto_venta.js' %}"></script>
+        <div class="punto-venta">
+            <div class="container">
+                <h2 class="mt-5 mb-4">PUNTO DE VENTA</h2>
+            </div>
+            <div class="pv">
+                <div class="v-productos">
+                    <h4>LISTA DE PRODUCTOS</h4>
+                    <div class="productos">
+                        <div class="p-buscador">
+                            <input class="form-control col-11 mx-auto my-2" type="text" id="buscador" placeholder="Buscar producto...">
+                        </div>
+                        <ul class="tp-nav my-2">
+                            <li class="tipo-producto" data-tipo-id="todos">
+                                Todos
+                            </li>
+                            {% for tp in tproducto %}
+                                <li class="tipo-producto" data-tipo-id="{{ tp.id }}">
+                                    {{ tp.nombre }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <ul id="productos-lista" class="productos-lista">
+                            {% for p in producto %}
+                                <li class="producto" data-id="{{p.id}}" data-tipo-id="{{ p.ptipo_id }}">
+                                    <div class="p-stock">stock: <b>{{p.cantidad}}</b></div>
+                                    <div class="p-info">
+                                        <div class="p-nombre">{{ p.nombre }}</div>
+                                        <div class="p-precio"><div>S/.</div><div class="pp">{{ p.precio }}</div></div> 
+                                    </div>
+                                    <img src="{{ p.imagen.url }}" alt="{{ p.nombre }} imagen" class="p-imagen">
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="v-lista">
+                    <h4>DETALLES DE VENTA</h4>
+                    <div class="v-detalles">
+                        <div class="v-detalles-lista">
+                            <div class="tabla-lista">
+                                <table class="table">
+                                    <thead class="pv-head">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>PRODUCTO</th>
+                                            <th>C/U</th>
+                                            <th>CANTIDAD</th>
+                                            <th>SUBTOTAL</th>
+                                            <th>&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="articulos">
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="v-detalles-otros">
+                                <form id="venta-formulario" method="POST" action="/productos/punto_venta/">
+                                    {% csrf_token %}
+                                    <div class="t-comprobante mb-3">
+                                        {{formVG.tipo_comprobante.label}}
+                                        {{formVG.tipo_comprobante}}
+                                    </div>
+                                    <div class="lp-total mb-4">
+                                        <input type="hidden" id="total" name="total" value="0.00">
+                                        <div class="lpt-label">TOTAL: S/. </div><div class="lpt-total">0.00</div>
+                                    </div>
+                                    <div class="vf-boton">
+                                        <button type="submit" class="btn btn-success my-auto">FINALIZAR VENTA $</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="mensaje" class="msg-ocultar">
+                <div id="mensaje-contenido"></div>
+            </div>
+        </div>
+    {% endblock %}

@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+    
+    <title>LOGIN::INVENTARIO</title>
+</head>
+<body>
+    
+    <div class="login">
+        <div class="contenedor">
+            <div>
+                <h2 class="text-center">INICIAR SESION</h2>
+            </div>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <label for="usuario">Usuario:</label>
+                    <input class="form-control" type="text" id="usuario" name="username">
+                </div>
+                <div class="row">
+                    <label for="contraseña">Contraseña:</label>
+                    <input class="form-control" type="password" id="contraseña" name="password">
+                </div>
+                <div>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger" role="alert">
+                                {{message}}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="row">
+                    <button type="submit" class="btn mx-auto">
+                        Iniciar Sesion
+                    </button>
+                </div>
+            </form>   
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,36 @@
+{% extends 'layouts/base.html' %}
+    {% load static %}
+    {% block content %}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'js/dashboard.js' %}"></script>
+
+    <div class="dashboard">
+        <div class="ds-index container">
+            <h3 class="my-5">Bienvenido {{user}}..!</h3>
+
+            <div class="caja">
+                <div class="mx-auto">
+                    <h4>PRODUCTOS CON MENOS STOCK</h4>
+                    <div class="grafico1">
+                        <canvas id="pstock"></canvas>
+                    </div>
+                </div>
+                <div class="mx-auto">
+                    <h4>TOTAL DE VENTAS POR DIA</h4>
+                    <div class="grafico2">
+                        <canvas id="ventapordia"></canvas>
+                    </div>
+                </div>
+                <div class="mx-auto">
+                    <h4>TOTAL DE PRODUCTOS MAS VENDIDOS</h4>
+                    <div class="grafico3">
+                        <canvas id="pmayorventas"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    {% endblock %}
